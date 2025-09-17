@@ -1,0 +1,113 @@
+name: Package and Upload to ProGet UF
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - 'v*'
+    branches:
+      - main
+
+env:
+  PG_API_URL: ${{ secrets.PROGET_API_URL }}
+  PG_API_KEY: ${{ secrets.PROGET_API_KEY }}
+
+jobs:
+  package-and-upload:
+    runs-on: [self-hosted]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Python Environment
+        uses: AMGGroupPS/actions/setup-python-env@v1
+        with:
+          python-version: "3.11"
+
+      - name: Ensure dist directory
+        uses: AMGGroupPS/actions/ensure-dir@v1
+        with:
+          path: "dist"
+
+      - name: Resolve upack tool
+        id: upack
+        uses: AMGGroupPS/actions/resolve-feed-tool@v1
+        with:
+          tool-name: "upack"
+
+      - name: Resolve pgutil tool
+        id: pgutil
+        uses: AMGGroupPS/actions/resolve-feed-tool@v1
+        with:
+          tool-name: "pgutil"
+
+      - name: Create Universal Package
+        shell: pwsh
+        run: |
+          # Create package metadata
+          $packageInfo = @{
+            group = ""
+            name = "${{ github.event.repository.name }}"
+            version = if ("${{ github.ref_type }}" -eq "tag") { "${{ github.ref_name }}".TrimStart('v') } else { "1.0.0-dev.${{ github.run_number }}" }
+            title = "${{ github.event.repository.name }}"
+            description = "Universal package for ${{ github.event.repository.name }}"
+          } | ConvertTo-Json -Depth 2
+          
+          $packageInfo | Out-File -FilePath "upack.json" -Encoding utf8
+          Write-Host "Created upack.json with content:"
+          Get-Content "upack.json"
+          
+          # Create the universal package, excluding common directories/files that shouldn't be packaged
+          $excludePatterns = @(
+            ".git*",
+            ".idea*", 
+            ".venv*",
+            "*.pyc",
+            "__pycache__*",
+            "dist*",
+            "build*",
+            "*.egg-info*",
+            ".pytest_cache*",
+            "node_modules*"
+          )
+          
+          $excludeArgs = $excludePatterns | ForEach-Object { "--exclude=$_" }
+          
+          Write-Host "Creating universal package..."
+          & "${{ steps.upack.outputs.tool-path }}" pack . --targetDirectory=dist --metadata=upack.json @excludeArgs
+          
+          if ($LASTEXITCODE -ne 0) {
+            Write-Error "Failed to create universal package"
+            exit $LASTEXITCODE
+          }
+          
+          # List created packages
+          Get-ChildItem -Path "dist" -Filter "*.upack" | ForEach-Object {
+            Write-Host "Created package: $($_.Name) (Size: $([math]::Round($_.Length / 1MB, 2)) MB)"
+          }
+
+      - name: Upload to ProGet Universal Feed
+        uses: AMGGroupPS/actions/publish-to-feed@v1
+        with:
+          tool-path: ${{ steps.pgutil.outputs.tool-path }}
+          feed-url: ${{ env.PG_API_URL }}
+          feed-name: "AMGGroupUP"
+          api-key: ${{ env.PG_API_KEY }}
+          files: "dist/*.upack"
+
+      - name: Upload package artifacts
+        uses: AMGGroupPS/actions/upload-dist-artifact@v1
+        with:
+          artifact-name: "universal-package"
+          path: "dist/*.upack"
+
+      - name: Persist debug files on failure
+        if: failure() || cancelled()
+        uses: AMGGroupPS/actions/persist-debug-files@v1
+        with:
+          source-paths: |
+            dist
+            upack.json
+            *.log
+          destination-root: "C:\\ActionsDebug\\${{ github.repository_owner }}\\${{ github.repository }}\\${{ github.run_id }}"
