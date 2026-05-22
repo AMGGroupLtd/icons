@@ -1,0 +1,30 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <rect x="0" y="0" width="256" height="256" rx="32" ry="32" fill="#0f172a"/>
+  <!-- network/tree of nodes representing fleet discovery -->
+  <!-- connecting lines -->
+  <path d="M128 72 L72 144" stroke="#3b82f6" stroke-width="6" fill="none"/>
+  <path d="M128 72 L128 144" stroke="#3b82f6" stroke-width="6" fill="none"/>
+  <path d="M128 72 L184 144" stroke="#3b82f6" stroke-width="6" fill="none"/>
+  <path d="M72 144 L72 192" stroke="#3b82f6" stroke-width="6" fill="none"/>
+  <path d="M128 144 L128 192" stroke="#3b82f6" stroke-width="6" fill="none"/>
+  <path d="M184 144 L184 192" stroke="#3b82f6" stroke-width="6" fill="none"/>
+  <!-- root host node (amber square = server) -->
+  <rect x="108" y="52" width="40" height="40" rx="4" ry="4" fill="#fbbf24"/>
+  <rect x="116" y="62" width="24" height="4" fill="#0f172a"/>
+  <rect x="116" y="72" width="24" height="4" fill="#0f172a"/>
+  <rect x="116" y="82" width="14" height="4" fill="#0f172a"/>
+  <!-- middle layer host nodes -->
+  <rect x="52" y="124" width="40" height="40" rx="4" ry="4" fill="#fbbf24"/>
+  <rect x="60" y="134" width="24" height="4" fill="#0f172a"/>
+  <rect x="60" y="144" width="24" height="4" fill="#0f172a"/>
+  <rect x="108" y="124" width="40" height="40" rx="4" ry="4" fill="#fbbf24"/>
+  <rect x="116" y="134" width="24" height="4" fill="#0f172a"/>
+  <rect x="116" y="144" width="24" height="4" fill="#0f172a"/>
+  <rect x="164" y="124" width="40" height="40" rx="4" ry="4" fill="#fbbf24"/>
+  <rect x="172" y="134" width="24" height="4" fill="#0f172a"/>
+  <rect x="172" y="144" width="24" height="4" fill="#0f172a"/>
+  <!-- leaf doc pages -->
+  <rect x="56" y="180" width="32" height="36" rx="3" ry="3" fill="#f8fafc"/>
+  <rect x="112" y="180" width="32" height="36" rx="3" ry="3" fill="#f8fafc"/>
+  <rect x="168" y="180" width="32" height="36" rx="3" ry="3" fill="#f8fafc"/>
+</svg>

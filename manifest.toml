@@ -1,0 +1,28 @@
+# iconize manifest
+#
+# One [apps."<app-id>"] table per icon. App-id matches the reverse-DNS
+# identifier `buildapp.py` derives for the same URL+name, so a row here
+# lines up directly with an installer build folder.
+#
+# This file is rewritten by `iconize` whenever an icon is finalized.
+# Hand-edit only the user-facing fields (description, prompt_summary);
+# the file paths and timestamps are managed by the tool.
+
+[apps."uk.co.amgnet.dev.serverdocs.sds"]
+name = "SDS"
+description = "Discover VMs and containers across a fleet of servers via SSH and maintain a plain-markdown wiki tree, editable through SilverBullet."
+source_readme = "/source/python/serverDocumentationSystem/README.md"
+mode = "svg"
+source_file = "icons/uk.co.amgnet.dev.serverdocs.sds/source.svg"
+prompt_summary = "serverdocs (SDS): tree/fleet of host nodes branching to document pages, AMG slate background with blue connectors, amber server nodes, white doc leaves — flat geometric."
+generated_at = "2026-05-22T13:36:12+00:00"
+generated_by = "iconize v0.1.0"
+files = [
+    "icons/uk.co.amgnet.dev.serverdocs.sds/favicon.ico",
+    "icons/uk.co.amgnet.dev.serverdocs.sds/icon-1024.png",
+    "icons/uk.co.amgnet.dev.serverdocs.sds/icon-192.png",
+    "icons/uk.co.amgnet.dev.serverdocs.sds/icon-256.png",
+    "icons/uk.co.amgnet.dev.serverdocs.sds/icon-512.png",
+    "icons/uk.co.amgnet.dev.serverdocs.sds/icon.ico",
+    "icons/uk.co.amgnet.dev.serverdocs.sds/source.svg",
+]
